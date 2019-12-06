@@ -4,22 +4,28 @@
 %Frequencia de amostragem
 % W = wT = 2pif/fs = 2pi/N
 % Para evitar aliasing a FA deve ser maior que a frequencia maxima do
-% sinal, dessa forma, a maior FA eh 2?.
+% sinal, dessa forma, a maior FA eh 2pi.
 fsamp = 2*pi;
 
 % regiao de transicao Deltaw < 0.1pi; usamos Deltaw = 0.08
-% frequencia de corte = pi/2 (a -6db)
+% frequencia de corte: wc = pi/2 (a -6db, padrao)
+% aqui observamos o inicio e o final da faixa de transicao
+% fcutsa: wc - ws
+% fcutsb: wc + wp
+% wp - ws = Deltaw
 fcutsa = (pi/2) - (pi*0.04);
 fcutsb = (pi/2) + (pi*0.04);
 fcuts = [fcutsa fcutsb];
 
 % atenuacao minima >= 50db
-% A = -20 log dta => A = 50db
-% Oscilacao das bandas => dta = 0.0031622776602 
+% A = -20 log dta => Escolhemos A = 50db
+% Oscilacao das bandas => Pela formula acima, inferimos que dta = 0.0031622776602 
 % M = A-8 / 2,285*(Deltaw) => M = 73.134656563015362169508950346232?
-% B = 0.5842(A - 21)^0.4 + 0.07886(A - 21) => B = 4.5335141209812482327179764338239?
+% Como A = 50, B = 0.5842(A - 21)^0.4 + 0.07886(A - 21) => B = 4.5335141209812482327179764338239?
+% define os valores dos ripples
 devs = [0.1 0.0031622776602];
-mags = [0 1];
+% define o filtro como passa baixa
+mags = [1 0];
 
 % Usando a janela de Kaiser
 % Nessa funcao obtemos os parametros para o Filtro de Kaiser:
@@ -30,7 +36,8 @@ mags = [0 1];
 [M, Wn, Beta, ftype] = kaiserord(fcuts, mags, devs, fsamp);
 
 % Janela de Kaiser na forma direta
-hh = fir1(M, Wn, ftype, kaiser(M+1, Beta), 'scale');
+% Usando os parametros calculados a mao nao muda muita coisa nao
+hh = fir1(74, Wn, ftype, kaiser(74+1, 4.5335141209812482327179764338239), 'scale');
 
 % Forma cascata (seções de segunda ordem)
 % Discrete-time transfer function to zero-pole conversion. => Converte a
