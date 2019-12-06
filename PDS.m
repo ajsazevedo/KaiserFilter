@@ -2,24 +2,24 @@
 
 % Requisitos do projeto:
 %Frequencia de amostragem
-% ? = ?T = 2?f/fs = 2?/N
+% W = wT = 2pif/fs = 2pi/N
 % Para evitar aliasing a FA deve ser maior que a frequencia maxima do
 % sinal, dessa forma, a maior FA eh 2?.
 fsamp = 2*pi;
 
-% regiao de transicao ?? < 0.1pi; usamos ?? = 0.08
+% regiao de transicao Deltaw < 0.1pi; usamos Deltaw = 0.08
 % frequencia de corte = pi/2 (a -6db)
 fcutsa = (pi/2) - (pi*0.04);
 fcutsb = (pi/2) + (pi*0.04);
 fcuts = [fcutsa fcutsb];
 
 % atenuacao minima >= 50db
-% A = ?20 log ?s => A = 50db
-% M = A?8 / 2,285?? => M = 73.134656563015362169508950346232?
-% B = 0.5842(A ? 21)^0.4 + 0.07886(A ? 21) => B = 4.5335141209812482327179764338239?
-% Oscilacao das bandas => ?s = 0.0031622776602 
+% A = -20 log dta => A = 50db
+% Oscilacao das bandas => dta = 0.0031622776602 
+% M = A-8 / 2,285*(Deltaw) => M = 73.134656563015362169508950346232?
+% B = 0.5842(A - 21)^0.4 + 0.07886(A - 21) => B = 4.5335141209812482327179764338239?
 devs = [0.1 0.0031622776602];
-mags = [1 0];
+mags = [0 1];
 
 % Usando a janela de Kaiser
 % Nessa funcao obtemos os parametros para o Filtro de Kaiser:
